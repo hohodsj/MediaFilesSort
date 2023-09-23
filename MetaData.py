@@ -5,7 +5,7 @@ import ffmpeg
 import mimetypes
 from datetime import datetime
 
-class MetaData():
+class MetaData:
     def __init__(self) -> None:
         pass
 
