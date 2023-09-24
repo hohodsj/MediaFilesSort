@@ -20,7 +20,7 @@ class MetaData:
             for tagid in exifdata:
                 tagname = TAGS.get(tagid, tagid)
                 if tagname.lower() == 'datetime':
-                    res = exifdata.get(tagid)[:10].split(':')
+                    res = exifdata.get(tagid)[:10].split(':') # yyyy:mm:dd <- 10
                     return res
         elif filetype.startswith('video'):
             format_info = self._get_video_meta(path)
