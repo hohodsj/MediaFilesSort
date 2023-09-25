@@ -31,8 +31,11 @@ class MetaData:
                         year_month_day = exifdata.get(tagid)[:10] #yyyymmdd
                         if ":" in year_month_day:
                             datetime_info = year_month_day.split(':') # yyyy:mm:dd <- 10
-                        else:
+                        elif "/" in year_month_day:
                             datetime_info = year_month_day.split('/') # yyyy/mm/dd <- 10
+                        else:
+                            logging.error(f"Delimiter unrecognized :{year_month_day} moving to 999 folder")
+                            datetime_info = ('9999','99','98')
                         return datetime_info
                     except Exception as e:
                         logging.error(f'Image datetime information is missing {path}')
@@ -40,7 +43,7 @@ class MetaData:
             format_info = self._get_video_meta(path)
             if format_info is None:
                 logging.error(f'Video meta data missing: {path}')
-                return ('9999', '99', '98') #unable to find video meta data
+                return ('9999', '99', '97') #unable to find video meta data
             try:
                 datetime_info = format_info.get('tags').get('creation_time')
                 return datetime_info[:10].split('-')

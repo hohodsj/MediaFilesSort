@@ -91,6 +91,7 @@ class DBUtil:
                WHERE src_path=? AND mode=? AND dest_path=?"""
         params = (status, str(datetime.now()), str(file_create_datetime), potential_duplicate, src_path, mode, dest_path)
         res = self.cursor.execute(sql, params)
+        self.con.commit()
         return res.rowcount
 
     def insert(self, src_path, mode, dest_path, 
@@ -98,6 +99,7 @@ class DBUtil:
         sql = f"INSERT INTO {DBUtil.TBL_NAME} VALUES (?,?,?,?,?,?,?,?)"
         params = (src_path, mode, dest_path, status, str(datetime.now()), str(datetime.now()), str(file_create_datetime), potential_duplicate)
         res = self.cursor.execute(sql, params)
+        self.con.commit()
         return res.rowcount
 
 if __name__ == '__main__':
