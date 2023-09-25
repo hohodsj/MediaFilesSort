@@ -1,7 +1,7 @@
-import os
+import os,sys
 import sqlite3 as lite
-from FileUtil import FileUtil
 from datetime import datetime
+from Utils.FileUtil import FileUtil
 
 class DBUtil:
     DB_FILE_NAME = "db/mediasort.db"
@@ -89,32 +89,34 @@ class DBUtil:
         sql = f"""UPDATE {DBUtil.TBL_NAME}
                SET status=?, update_date=?, file_create_datetime=?, potential_duplicate=?
                WHERE src_path=? AND mode=? AND dest_path=?"""
-        params = (status, str(datetime.now), str(file_create_datetime), potential_duplicate, src_path, mode, dest_path)
+        params = (status, str(datetime.now()), str(file_create_datetime), potential_duplicate, src_path, mode, dest_path)
         res = self.cursor.execute(sql, params)
         return res.rowcount
 
     def insert(self, src_path, mode, dest_path, 
                status,  file_create_datetime, potential_duplicate):
         sql = f"INSERT INTO {DBUtil.TBL_NAME} VALUES (?,?,?,?,?,?,?,?)"
-        params = (src_path, mode, dest_path, status, str(datetime.now), str(datetime.now), str(file_create_datetime), potential_duplicate)
+        params = (src_path, mode, dest_path, status, str(datetime.now()), str(datetime.now()), str(file_create_datetime), potential_duplicate)
         res = self.cursor.execute(sql, params)
         return res.rowcount
 
 if __name__ == '__main__':
-    dest = '/path/to/db'
+    dest = '/path/to/dest'
     src_path = "src_path"
     mode = "mode"
     dest_path = "dest_path"
     status = "status"
-    file_create_datetime = datetime.now
+    file_create_datetime = datetime.now()
     potential_duplicate = False
     db = DBUtil(dest)
     ct = db.upsert(src_path, mode, dest_path, status, file_create_datetime, potential_duplicate)
     print(ct)
     res = db.select(src_path=src_path, mode=mode, dest_path=dest_path)
     print(res)
+    assert len(res) > 0
+    assert res[0]['src_path'] == src_path
     # update
-    file_create_datetime = datetime.now
+    file_create_datetime = datetime.now()
     status = 'different status'
     potential_duplicate = True
     ct = db.upsert(src_path, mode, dest_path, status, file_create_datetime, potential_duplicate)
