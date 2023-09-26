@@ -28,14 +28,14 @@ class DBUtil:
             potential_duplicate(bool): potential duplicate files determined by repeated dest_path
             '''
             create_table_sql = f"""CREATE TABLE IF NOT EXISTS {DBUtil.TBL_NAME}(
-                src_path, 
-                mode, 
-                dest_path, 
-                status, 
-                create_date, 
-                update_date, 
-                file_create_datetime, 
-                potential_duplicate)"""
+                src_path VARCHAR(500), 
+                mode VARCHAR(10), 
+                dest_path VARCHAR(500), 
+                status VARCHAR(50), 
+                create_date TIMESTAMP, 
+                update_date TIMESTAMP, 
+                file_create_datetime TIMESTAMP, 
+                potential_duplicate BOOLEAN)"""
             self.cursor.execute(create_table_sql)
             self.con.commit()
         except Exception as e:
@@ -89,7 +89,7 @@ class DBUtil:
         sql = f"""UPDATE {DBUtil.TBL_NAME}
                SET status=?, update_date=?, file_create_datetime=?, potential_duplicate=?
                WHERE src_path=? AND mode=? AND dest_path=?"""
-        params = (status, str(datetime.now()), str(file_create_datetime), potential_duplicate, src_path, mode, dest_path)
+        params = (status, datetime.now(), str(file_create_datetime), potential_duplicate, src_path, mode, dest_path)
         res = self.cursor.execute(sql, params)
         self.con.commit()
         return res.rowcount
@@ -97,7 +97,7 @@ class DBUtil:
     def insert(self, src_path, mode, dest_path, 
                status,  file_create_datetime, potential_duplicate):
         sql = f"INSERT INTO {DBUtil.TBL_NAME} VALUES (?,?,?,?,?,?,?,?)"
-        params = (src_path, mode, dest_path, status, str(datetime.now()), str(datetime.now()), str(file_create_datetime), potential_duplicate)
+        params = (src_path, mode, dest_path, status, datetime.now(), datetime.now(), file_create_datetime, potential_duplicate)
         res = self.cursor.execute(sql, params)
         self.con.commit()
         return res.rowcount
