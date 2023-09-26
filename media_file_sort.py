@@ -38,7 +38,8 @@ def main():
             (year,month,*day) = file_origin_date
             file_create_date = f'{year}-{month}-{day}'
             dest = f'{dest_path}/{year}/{month}/{filename}'
-            if len(db.select(src_path=file, mode=args.mode, dest_path=dest)) == 0:
+            find_res = db.select(src_path=file, mode=args.mode, dest_path=dest)
+            if len(find_res) == 0:
                 print(f"Processing: {file}")
                 # if not exists in db
                 potential_duplicate = True if dest_file2count.get(dest,0) > 0 or len(db.select(dest_path=dest)) > 0 else False
