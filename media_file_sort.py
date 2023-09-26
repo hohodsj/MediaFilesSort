@@ -58,7 +58,7 @@ def main():
             db_dest_path = db_file['dest_path']
             db_status = db_file['status']
             db_file_create_datetime = db_file['file_create_datetime']
-            db_potential_duplicate = db_file['file_potential_duplicate']
+            db_potential_duplicate = db_file['potential_duplicate']
             print(f'Updating {db_src_path=} {db_mode=} {db_dest_path=} {db_status=} {db_file_create_datetime=} {db_potential_duplicate=} to Complete')
             db.update(src_path=db_src_path, mode=args.mode, dest_path=db_dest_path, status='Completed', file_create_datetime=db_file_create_datetime, potential_duplicate=db_potential_duplicate)
 
