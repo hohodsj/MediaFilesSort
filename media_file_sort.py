@@ -17,7 +17,7 @@ def main():
     # create destination direcotry if not exists
     fu = utils.FileUtil()
     if not fu.is_folder_exists(dest_path):
-        fu.create_directory_recursive(f'{dest_path}')
+        fu.create_directory_recursive(dest_path)
     if not fu.is_folder_exists(f'{dest_path}/Logs'):
         fu.create_directory_recursive(f'{dest_path}/Logs')
     db = utils.DBUtil(dest_path)
