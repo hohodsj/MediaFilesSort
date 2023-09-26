@@ -36,7 +36,7 @@ def main():
                 continue
             print(f'{origin_file_path}:{file_origin_date}')
             (year,month,day) = file_origin_date
-            file_create_date = datetime.strptime('{year}-{month}-{day}', '%Y-%m-%d').date()
+            file_create_date = datetime.strptime(f'{year}-{month}-{day}', '%Y-%m-%d').date()
             dest_file_path = f'{dest_path}/{year}/{month}/{filename}'
             find_res = db.select(src_path=origin_file_path, mode=args.mode, dest_path=dest_file_path)
             if len(find_res) == 0:
