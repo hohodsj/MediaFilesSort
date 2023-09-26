@@ -31,8 +31,15 @@ class MetaData:
                         year_month_day = exifdata.get(tagid)[:10] #yyyymmdd
                         if ":" in year_month_day:
                             datetime_info = year_month_day.split(':') # yyyy:mm:dd <- 10
+                            all_days_are_num = all([info.isnumeric() for info in datetime_info])
+                            if not all_days_are_num:
+                                logging.error(f"Not all days are num: {year_month_day} for file {path}")
+                                datetime_info = ('9999','12','30')
                         elif "/" in year_month_day:
                             datetime_info = year_month_day.split('/') # yyyy/mm/dd <- 10
+                            if not all_days_are_num:
+                                logging.error(f"Not all days are num: {year_month_day} for file {path}")
+                                datetime_info = ('9999','12','30')
                         else:
                             logging.error(f"Delimiter unrecognized :{year_month_day} moving to 999 folder")
                             datetime_info = ('9999','12','30')
