@@ -28,30 +28,30 @@ def main():
     if args.mode == 'cp':
         dest_file2count = defaultdict(int)
         # Search through src and update db
-        for file in fu.find_files_recursive(src_path):
+        for origin_file_path in fu.find_files_recursive(src_path):
             
-            filename = file.split('/')[-1]
-            file_origin_date = md.get_file_datetime(file)
+            filename = origin_file_path.split('/')[-1]
+            file_origin_date = md.get_file_datetime(origin_file_path)
             if not file_origin_date:
                 continue
-            print(f'{file}:{file_origin_date}')
+            print(f'{origin_file_path}:{file_origin_date}')
             (year,month,*day) = file_origin_date
             file_create_date = f'{year}-{month}-{day}'
-            dest = f'{dest_path}/{year}/{month}/{filename}'
-            find_res = db.select(src_path=file, mode=args.mode, dest_path=dest)
+            dest_file_path = f'{dest_path}/{year}/{month}/{filename}'
+            find_res = db.select(src_path=origin_file_path, mode=args.mode, dest_path=dest_file_path)
             if len(find_res) == 0:
-                print(f"Processing: {file}")
+                print(f"Processing: {origin_file_path}")
                 # if not exists in db
-                potential_duplicate = True if dest_file2count.get(dest,0) > 0 or len(db.select(dest_path=dest)) > 0 else False
+                potential_duplicate = True if dest_file2count.get(dest_file_path,0) > 0 or len(db.select(dest_path=dest_file_path)) > 0 else False
                 # if duplicated append count before the .
                 if potential_duplicate:
-                    dest_file2count[dest]+=1
-                    file_path, file_extension = os.path.splitext(dest)
-                    dest = f'{file_path}{dest_file2count[dest]}{file_extension}' # /src/to/dest1.extension
-                    logging.warning(f'Duplicate detected: {dest}')
-                db.insert(src_path=src_path, mode=args.mode, dest_path=dest, status="initiated", file_create_datetime=file_create_date, potential_duplicate=potential_duplicate)
+                    dest_file2count[dest_file_path]+=1
+                    file_path, file_extension = os.path.splitext(dest_file_path)
+                    dest_file_path= f'{file_path}{dest_file2count[dest_file_path]}{file_extension}' # /src/to/dest1.extension
+                    logging.warning(f'Duplicate detected: {dest_file_path}')
+                db.insert(src_path=origin_file_path, mode=args.mode, dest_path=dest_file_path, status="initiated", file_create_datetime=file_create_date, potential_duplicate=potential_duplicate)
             else:
-                print(f"Skipping: {file}")
+                print(f"Skipping: {origin_file_path}")
         # at the point all dest files should be created db
         for db_file in db.select(status='initiated'):
             db_src_path = db_file['src_path']
