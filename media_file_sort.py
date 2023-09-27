@@ -35,8 +35,8 @@ def main():
             if not file_origin_date:
                 continue
             print(f'{origin_file_path}:{file_origin_date}')
-            (year,month,day) = file_origin_date
             try:
+                (year,month,day) = file_origin_date
                 file_create_date = datetime.strptime(f'{year}-{month}-{day}', '%Y-%m-%d').date()
             except Exception as e:
                 logging.error(f'Date not recognize {file_origin_date} for {origin_file_path}')
