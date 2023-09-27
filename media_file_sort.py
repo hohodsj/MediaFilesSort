@@ -36,7 +36,14 @@ def main():
                 continue
             print(f'{origin_file_path}:{file_origin_date}')
             (year,month,day) = file_origin_date
-            file_create_date = datetime.strptime(f'{year}-{month}-{day}', '%Y-%m-%d').date()
+            try:
+                file_create_date = datetime.strptime(f'{year}-{month}-{day}', '%Y-%m-%d').date()
+            except Exception as e:
+                logging.error(f'Date not recognize {file_origin_date} for {origin_file_path}')
+                year = '9999'
+                month = '12'
+                day = '31'
+                file_create_date = datetime(year=9999, month=12, day=31)
             dest_file_path = f'{dest_path}/{year}/{month}/{filename}'
             find_res = db.select(src_path=origin_file_path, mode=args.mode, dest_path=dest_file_path)
             if len(find_res) == 0:
