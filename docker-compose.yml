@@ -1,0 +1,11 @@
+services:
+  mediafilesort:
+    build: ./
+    volumes:
+      - ./dest:/app/dest
+      - ./media:/app/src
+    command: 
+      - python
+      - media_file_sort.py
+      - src
+      - dest
