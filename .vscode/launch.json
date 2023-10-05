@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/media_file_sort.py",
-            "args": ["/src","/dest"],
+            "args": ["./media","./dest"],
             "console": "integratedTerminal",
             "justMyCode": true
         }

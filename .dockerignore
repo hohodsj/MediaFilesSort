@@ -4,5 +4,4 @@ venv/
 __pycache__/
 *.log
 dest/
-.vscode/
-local_build.sh
+README.md

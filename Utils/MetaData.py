@@ -22,7 +22,7 @@ class MetaData:
             exifdata = self._get_image_meta(path)
             if exifdata is None:
                 print(f'meta data is not available for {path} moving to 9999 folder')
-                logging.error(f'Image meta data missing: {path}')
+                logging.error(f'Image meta data missing origin file: {path}')
                 return ('9999','12','31') #unable to find photo meta data
             for tagid in exifdata:
                 tagname = TAGS.get(tagid, tagid)
@@ -31,25 +31,25 @@ class MetaData:
                         year_month_day = exifdata.get(tagid)[:10] #yyyymmdd
                         if ":" in year_month_day:
                             datetime_info = year_month_day.split(':') # yyyy:mm:dd <- 10
-                            all_days_are_num = all([info.isnumeric() for info in datetime_info])
                         elif "/" in year_month_day:
                             datetime_info = year_month_day.split('/') # yyyy/mm/dd <- 10
                         else:
-                            logging.error(f"Delimiter unrecognized :{year_month_day} moving to 999 folder")
+                            logging.error(f"Delimiter unrecognized :{year_month_day} origin file: {path}")
                             datetime_info = ('9999','12','31')
-                        return datetime_info
+                        (year, month, day) = datetime_info
+                        return (f"{year:04}", f"{month:02}", f"{day:02}")
                     except Exception as e:
-                        logging.error(f'Image datetime information is missing {path}')
+                        logging.error(f'Image datetime information is missing origin file: {path}')
         elif filetype.startswith('video'):
             format_info = self._get_video_meta(path)
             if format_info is None:
-                logging.error(f'Video meta data missing: {path}')
+                logging.error(f'Video meta data missing origin file: {path}')
                 return ('9999', '12', '29') #unable to find video meta data
             try:
                 datetime_info = format_info.get('tags').get('creation_time')
                 return datetime_info[:10].split('-')
             except Exception as e:
-                logging.error(f'Video datetime information is missing {path}')
+                logging.error(f'Video datetime information is missing origin file: {path}')
         else:
             logging.warn(f'Consider processing: {path}')
             print(f'Consider processing: {path}')

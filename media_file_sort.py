@@ -5,10 +5,11 @@ from datetime import datetime
 from collections import defaultdict
 
 def main():
+    print('Start')
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('src_path', type=str, help="Source path")
-    parser.add_argument('dest_path', type=str, help="Destination path")
+    parser.add_argument('src_path', default='./src', type=str, help="Source path")
+    parser.add_argument('dest_path', default='./dest', type=str, help="Destination path")
     parser.add_argument('-m', '--mode', type=str, default='cp', help="Copy:cp") # support move later on
     args = parser.parse_args()
     src_path = args.src_path
@@ -39,7 +40,7 @@ def main():
                 (year,month,day) = file_origin_date
                 file_create_date = datetime.strptime(f'{year}-{month}-{day}', '%Y-%m-%d').date()
             except Exception as e:
-                logging.error(f'Date not recognize {file_origin_date} for {origin_file_path}')
+                logging.error(f'Date not recognize {file_origin_date} origin file: {origin_file_path}')
                 year = '9999'
                 month = '12'
                 day = '31'
@@ -67,11 +68,10 @@ def main():
             db_status = db_file['status']
             db_file_create_datetime = db_file['file_create_datetime']
             db_potential_duplicate = db_file['potential_duplicate']
-            print(f'Updating {db_src_path=} {db_mode=} {db_dest_path=} {db_status=} {db_file_create_datetime=} {db_potential_duplicate=} to Complete')
+            fu.copy_file(db_src_path, db_dest_path)
+            print(f"Completed copying file from {db_src_path} to {db_dest_path}")
             db.update(src_path=db_src_path, mode=args.mode, dest_path=db_dest_path, status='Completed', file_create_datetime=db_file_create_datetime, potential_duplicate=db_potential_duplicate)
-
-
-
+            print(f'Completed updating {db_src_path=} {db_mode=} {db_dest_path=} {db_status=} {db_file_create_datetime=} {db_potential_duplicate=} to Complete')
 
 if __name__=='__main__':
     main()
