@@ -41,10 +41,11 @@ class FileUtil:
         dest_parts = dest.split('/')
         # src must contains file name, if last part of src == last part of dest
         # dest must contains file
+        dest_directory = dest
         if src_parts[-1] == dest_parts[-1]:
-            dest = "/".join(dest_parts[:-1])
-        if not self.is_folder_exists(dest):
-            self.create_directory_recursive(dest)
+            dest_directory = "/".join(dest_parts[:-2])
+        if not self.is_folder_exists(dest_directory):
+            self.create_directory_recursive(dest_directory)
         shutil.copy2(src, dest)
         
 if __name__ == '__main__':
