@@ -72,6 +72,18 @@ def main():
             print(f"Completed copying file from {db_src_path} to {db_dest_path}")
             db.update(src_path=db_src_path, mode=args.mode, dest_path=db_dest_path, status='Completed', file_create_datetime=db_file_create_datetime, potential_duplicate=db_potential_duplicate)
             print(f'Completed updating {db_src_path=} {db_mode=} {db_dest_path=} {db_status=} {db_file_create_datetime=} {db_potential_duplicate=} to Complete')
+    elif args.mode == 'db':
+        for db_file in db.select(status='initiated'):
+            db_src_path = db_file['src_path']
+            db_mode = db_file['mode']
+            db_dest_path = db_file['dest_path']
+            db_status = db_file['status']
+            db_file_create_datetime = db_file['file_create_datetime']
+            db_potential_duplicate = db_file['potential_duplicate']
+            fu.copy_file(db_src_path, db_dest_path)
+            print(f"Completed copying file from {db_src_path} to {db_dest_path}")
+            db.update(src_path=db_src_path, mode=args.mode, dest_path=db_dest_path, status='Completed', file_create_datetime=db_file_create_datetime, potential_duplicate=db_potential_duplicate)
+            print(f'Completed updating {db_src_path=} {db_mode=} {db_dest_path=} {db_status=} {db_file_create_datetime=} {db_potential_duplicate=} to Complete')
 
 if __name__=='__main__':
     main()
