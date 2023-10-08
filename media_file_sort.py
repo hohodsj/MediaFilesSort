@@ -14,6 +14,7 @@ def main():
     args = parser.parse_args()
     src_path = args.src_path
     dest_path = args.dest_path
+    print(f'{args.mode=}')
     
     # create destination direcotry if not exists
     fu = utils.FileUtil()
