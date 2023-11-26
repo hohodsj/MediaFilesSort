@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/media_file_sort.py",
-            "args": ["./media","./dest"],
+            "args": ["/Volumes/Element/hoho/Photo","/Volumes/Element/hoho/Test"],
             "console": "integratedTerminal",
             "justMyCode": true
         }

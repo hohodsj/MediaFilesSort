@@ -7,5 +7,7 @@ services:
     command: 
       - python
       - media_file_sort.py
+      - --mode
+      - db
       - src
       - dest
