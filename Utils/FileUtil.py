@@ -1,3 +1,4 @@
+import datetime
 import os
 import os.path
 import shutil
@@ -13,11 +14,19 @@ class FileUtil:
                 yield filepath
     
     def find_files_recursive(self, path:str):
-        for dirpath, _, filenames in os.walk(path):
+        for root, _, filenames in os.walk(path):
             for filename in filenames:
-                if not filename.startswith('.'): # ignores hidden files
-                    filepath = os.path.join(dirpath, filename)
+                if not filename.startswith('.') and os.path.getmtime(): # ignores hidden files
+                    filepath = os.path.join(root, filename)
                     yield filepath
+    
+    def find_files_after_date(self, path:str, date:datetime):
+        for root, dirs, files in os.walk(path):
+            for dir in dirs:
+                subDirPath = os.path.join(root, dir)
+                if os.path.getmtime(subDirPath) > date:
+                    return self.find_files_recursive(subDirPath)
+                    
     
     def is_folder_exists(self, path:str):
         return os.path.isdir(path)

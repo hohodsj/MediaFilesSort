@@ -29,9 +29,10 @@ def main():
 
     if args.mode == 'cp':
         dest_file2count = defaultdict(int)
+        previous_update_date = db.get_last_update_date()
         # Search through src and update db
-        for origin_file_path in fu.find_files_recursive(src_path):
-            
+        # for origin_file_path in fu.find_files_recursive(src_path):
+        for origin_file_path in fu.find_files_after_date(src_path, previous_update_date):
             filename = origin_file_path.split('/')[-1]
             file_origin_date = md.get_file_datetime(origin_file_path)
             if not file_origin_date:
@@ -73,7 +74,7 @@ def main():
             print(f"Completed copying file from {db_src_path} to {db_dest_path}")
             db.update(src_path=db_src_path, mode=args.mode, dest_path=db_dest_path, status='Completed', file_create_datetime=db_file_create_datetime, potential_duplicate=db_potential_duplicate)
             print(f'Completed updating {db_src_path=} {db_mode=} {db_dest_path=} {db_status=} {db_file_create_datetime=} {db_potential_duplicate=} to Complete')
-    elif args.mode == 'db':
+    elif args.mode == 'db': # process existing data within db
         for db_file in db.select(status='initiated'):
             db_src_path = db_file['src_path']
             db_mode = db_file['mode']

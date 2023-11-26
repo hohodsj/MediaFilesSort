@@ -101,6 +101,11 @@ class DBUtil:
         res = self.cursor.execute(sql, params)
         self.con.commit()
         return res.rowcount
+    
+    def get_last_update_date(self):
+        sql = f"SELECT MAX(update_date) FROM {DBUtil.TBL_NAME}"
+        res = self.cursor.execute(sql)
+        return res.fetchone()
 
 if __name__ == '__main__':
     dest = '/path/to/dest'
